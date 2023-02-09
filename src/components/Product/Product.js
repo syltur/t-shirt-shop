@@ -8,9 +8,10 @@ import shortid from 'shortid';
 const Product = (props) => {
   const [currentColor, setCurrentColor] = useState(props.data.colors[0]);
   const [currentSize, setCurrentSize] = useState(props.data.sizes[0].name);
-  const [currentPrice, setCurrentPrice] = useState(props.data.sizes[0].additionalPrice);
+  const [currentPrice, setCurrentPrice] = useState(
+    props.data.sizes[0].additionalPrice
+  );
 
-  console.log(currentColor, currentSize, currentPrice);
 
   const prepareColorClassName = (color) => {
     return styles[
@@ -20,6 +21,26 @@ const Product = (props) => {
 
   const getPrice = () => {
     return props.data.basePrice + currentPrice;
+  };
+
+  const title = props.data.title;
+
+  const productToBasket = () => {
+    return console.log(
+      'Summary\n',
+      '========\n',
+      'Name: ',
+      title,
+      '\n',
+      'Price: ',
+      getPrice(),
+      '\n',
+      'Size: ',
+      currentSize,
+      '\n',
+      'Color: ',
+      currentColor
+    );
   };
 
   return (
@@ -45,7 +66,9 @@ const Product = (props) => {
                   <button
                     type='button'
                     className={
-                      (size.name, currentSize === size.name && styles.active)
+                      size.name && currentSize === size.name
+                        ? styles.active
+                        : undefined
                     }
                     onClick={() => {
                       setCurrentSize(size.name);
@@ -61,18 +84,23 @@ const Product = (props) => {
               {props.data.colors.map((color) => (
                 <li key={shortid()}>
                   <button
-                    button
                     type='button'
                     className={clsx(
                       prepareColorClassName(color),
-                      currentColor === color && styles.active
+                      currentColor === color ? styles.active : undefined
                     )}
                     onClick={() => setCurrentColor(color)}></button>
                 </li>
               ))}
             </ul>
           </div>
-          <Button className={styles.button}>
+          <Button
+            type='button'
+            className={styles.button}
+            onClick={(e) => {
+              e.preventDefault();
+              productToBasket();
+            }}>
             <span className='fa fa-shopping-cart' />
           </Button>
         </form>
