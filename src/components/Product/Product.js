@@ -6,15 +6,20 @@ import { useState } from 'react';
 import shortid from 'shortid';
 
 const Product = (props) => {
-  const [currentColor, setCuurentColor] = useState(props.data.colors[0]);
+  const [currentColor, setCurrentColor] = useState(props.data.colors[0]);
   const [currentSize, setCurrentSize] = useState(props.data.sizes[0].name);
+  const [currentPrice, setCurrentPrice] = useState(props.data.sizes[0].additionalPrice);
 
-  console.log(currentColor, currentSize);
+  console.log(currentColor, currentSize, currentPrice);
 
   const prepareColorClassName = (color) => {
     return styles[
       'color' + color[0].toUpperCase() + color.substr(1).toLowerCase()
     ];
+  };
+
+  const getPrice = () => {
+    return props.data.basePrice + currentPrice;
   };
 
   return (
@@ -29,7 +34,7 @@ const Product = (props) => {
       <div>
         <header>
           <h2 className={styles.name}>{props.data.title}</h2>
-          <span className={styles.price}>Price: {props.data.basePrice}$</span>
+          <span className={styles.price}>Price: {getPrice()}$</span>
         </header>
         <form>
           <div className={styles.sizes}>
@@ -37,8 +42,15 @@ const Product = (props) => {
             <ul className={styles.choices}>
               {props.data.sizes.map((size) => (
                 <li key={shortid()}>
-                  <button button type='button' className={(size.name, currentSize === size.name && styles.active)} 
-                  onClick={() => setCurrentSize(size.name)}>{`${size.name}`}</button>
+                  <button
+                    type='button'
+                    className={
+                      (size.name, currentSize === size.name && styles.active)
+                    }
+                    onClick={() => {
+                      setCurrentSize(size.name);
+                      setCurrentPrice(size.additionalPrice);
+                    }}>{`${size.name}`}</button>
                 </li>
               ))}
             </ul>
@@ -48,8 +60,14 @@ const Product = (props) => {
             <ul className={styles.choices}>
               {props.data.colors.map((color) => (
                 <li key={shortid()}>
-                  <button type='button' className={clsx(prepareColorClassName(color),currentColor === color && styles.active)}
-                    onClick={() => setCuurentColor(color)}></button>
+                  <button
+                    button
+                    type='button'
+                    className={clsx(
+                      prepareColorClassName(color),
+                      currentColor === color && styles.active
+                    )}
+                    onClick={() => setCurrentColor(color)}></button>
                 </li>
               ))}
             </ul>
