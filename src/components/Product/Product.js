@@ -12,8 +12,6 @@ const Product = (props) => {
     props.sizes[0].additionalPrice
   );
 
-  console.log(currentColor, currentSize, currentPrice);
-
   const getPrice = () => {
     return props.basePrice + currentPrice;
   };
