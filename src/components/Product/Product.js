@@ -1,8 +1,8 @@
 import styles from './Product.module.scss';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ProductImage from '../ProductImage/ProductImage';
-import ProductOptions from '../ProductOptions/ProductOptions';
+import ProductForm from '../ProductForm/ProductForm';
 
 const Product = (props) => {
   // eslint-disable-next-line no-unused-vars
@@ -12,9 +12,13 @@ const Product = (props) => {
     props.sizes[0].additionalPrice
   );
 
-  const getPrice = () => {
-    return props.basePrice + currentPrice;
+  console.log(currentColor, currentSize, currentPrice);
+
+  const getPrice = (a, b) => {
+    return a + b;
   };
+
+  const totalPrice = useMemo(() => getPrice(props.basePrice, currentPrice), [props.basePrice, currentPrice])
 
   const title = props.title;
 
@@ -27,7 +31,7 @@ const Product = (props) => {
       title,
       '\n',
       'Price: ',
-      getPrice(),
+      totalPrice,
       '\n',
       'Size: ',
       currentSize,
@@ -43,9 +47,9 @@ const Product = (props) => {
       <div>
         <header>
           <h2 className={styles.name}>{props.title}</h2>
-          <span className={styles.price}>Price: {getPrice()} $</span>
+          <span className={styles.price}>Price: {totalPrice} $</span>
         </header>
-        <ProductOptions
+        <ProductForm
           sizes={props.sizes}
           size={props.size}
           currentSize={currentSize}
